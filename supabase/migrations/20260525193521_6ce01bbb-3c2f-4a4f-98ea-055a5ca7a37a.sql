@@ -1,0 +1,1 @@
+delete from auth.users where email = 'magkudy4life@gmail.com';
