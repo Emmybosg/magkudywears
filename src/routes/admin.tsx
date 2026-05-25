@@ -86,7 +86,10 @@ function Admin() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-10 space-y-10">
-        <NewProduct onCreated={() => qc.invalidateQueries({ queryKey: ["admin-products"] }) && qc.invalidateQueries({ queryKey: ["products"] })} />
+        <NewProduct onCreated={() => {
+          qc.invalidateQueries({ queryKey: ["admin-products"] });
+          qc.invalidateQueries({ queryKey: ["products"] });
+        }} />
 
         <section>
           <h2 className="text-xl font-semibold tracking-tight mb-4">Your products</h2>
