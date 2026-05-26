@@ -59,7 +59,7 @@ export function useCart() {
   };
 }
 
-export const WHATSAPP_NUMBER = "2348000000000"; // Edit to your number (no + sign)
+export const WHATSAPP_NUMBER = "2349134211076"; // Edit to your number (no + sign)
 
 export function buildWhatsAppOrder(items: CartItem[], total: number) {
   const lines = items.map(
