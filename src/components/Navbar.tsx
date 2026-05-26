@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingBag, Sparkles } from "lucide-react";
+import { ShoppingBag, Sparkles, Shield } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
@@ -22,20 +22,28 @@ export function Navbar() {
             <a href="#products" className="hover:text-foreground transition-colors">Shop</a>
             <a href="#why" className="hover:text-foreground transition-colors">Why us</a>
             <a href="#contact" className="hover:text-foreground transition-colors">Contact</a>
-            <Link to="/admin" className="hover:text-foreground transition-colors">Admin</Link>
           </nav>
-          <button
-            onClick={() => setOpen(true)}
-            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-card)] hover:opacity-90 transition"
-            aria-label="Open cart"
-          >
-            <ShoppingBag className="h-5 w-5" />
-            {count > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
-                {count}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/admin"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-card)] hover:bg-muted transition"
+            >
+              <Shield className="h-4 w-4 text-primary" />
+              Admin
+            </Link>
+            <button
+              onClick={() => setOpen(true)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-card)] hover:opacity-90 transition"
+              aria-label="Open cart"
+            >
+              <ShoppingBag className="h-5 w-5" />
+              {count > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
+                  {count}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </header>
       <CartDrawer open={open} onClose={() => setOpen(false)} />
