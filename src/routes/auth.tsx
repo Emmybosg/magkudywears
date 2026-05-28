@@ -1,11 +1,9 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/auth")({ component: Auth });
-
-function Auth() {
+export default function Auth() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
@@ -29,7 +27,7 @@ function Auth() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
-      navigate({ to: "/admin" });
+      navigate("/admin");
     } catch (e: any) {
       setErr(e.message);
     } finally {
