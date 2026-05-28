@@ -9,11 +9,13 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
+    setInfo(null);
     setLoading(true);
     try {
       if (mode === "signup") {
@@ -28,6 +30,27 @@ export default function Auth() {
         if (error) throw error;
       }
       navigate("/admin");
+    } catch (e: any) {
+      setErr(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const forgot = async () => {
+    setErr(null);
+    setInfo(null);
+    if (!email) {
+      setErr("Enter your email above first, then click Forgot password.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setInfo("Check your email for a password reset link.");
     } catch (e: any) {
       setErr(e.message);
     } finally {
@@ -67,6 +90,7 @@ export default function Auth() {
             />
           </div>
           {err && <p className="text-sm text-destructive">{err}</p>}
+          {info && <p className="text-sm text-muted-foreground">{info}</p>}
           <button
             type="submit" disabled={loading}
             className="w-full rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-[var(--shadow-card)] hover:opacity-90 transition disabled:opacity-50"
@@ -81,6 +105,15 @@ export default function Auth() {
         >
           {mode === "login" ? "Need an account? Sign up" : "Have an account? Sign in"}
         </button>
+        {mode === "login" && (
+          <button
+            onClick={forgot}
+            disabled={loading}
+            className="mt-2 w-full text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
+          >
+            Forgot password?
+          </button>
+        )}
       </div>
     </div>
   );
