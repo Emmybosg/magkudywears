@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { ShoppingBag, Sparkles, Shield } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useState } from "react";

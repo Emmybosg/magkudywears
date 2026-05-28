@@ -1,13 +1,11 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, LogOut, Trash2, Upload, Plus } from "lucide-react";
 import type { Product } from "@/components/ProductCard";
 
-export const Route = createFileRoute("/admin")({ component: Admin });
-
-function Admin() {
+export default function Admin() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
@@ -35,7 +33,7 @@ function Admin() {
     if (userId === null && isAdmin === null) {
       const t = setTimeout(() => {
         supabase.auth.getSession().then(({ data }) => {
-          if (!data.session) navigate({ to: "/auth" });
+          if (!data.session) navigate("/auth");
         });
       }, 200);
       return () => clearTimeout(t);
@@ -54,7 +52,7 @@ function Admin() {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    navigate({ to: "/" });
+    navigate("/");
   };
 
   if (!userId) {

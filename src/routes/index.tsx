@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, ArrowRight } from "lucide-react";
@@ -8,9 +7,7 @@ import { ProductCard, type Product } from "@/components/ProductCard";
 import { WHATSAPP_NUMBER } from "@/lib/cart";
 import hero from "@/assets/hero.jpg";
 
-export const Route = createFileRoute("/")({ component: Index });
-
-function Index() {
+export default function Index() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
