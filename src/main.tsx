@@ -6,6 +6,7 @@ import "./styles.css";
 import Index from "./routes/index";
 import Auth from "./routes/auth";
 import Admin from "./routes/admin";
+import ResetPassword from "./routes/reset-password";
 import NotFound from "./routes/not-found";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
