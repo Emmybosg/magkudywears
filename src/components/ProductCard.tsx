@@ -13,6 +13,14 @@ export type Product = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = () => {
+    add({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[var(--shadow-card)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-elegant)] hover:border-transparent">
       <div className="relative aspect-[4/5] overflow-hidden bg-muted">
@@ -34,15 +42,18 @@ export function ProductCard({ product }: { product: Product }) {
         )}
         <button
           disabled={!product.in_stock}
-          onClick={() =>
-            add({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url })
-          }
+          onClick={handleAdd}
           aria-label="Add to cart"
           className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] opacity-0 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 disabled:opacity-30 hover:scale-110"
           style={{ background: "var(--gradient-ember)" }}
         >
           <Plus className="h-5 w-5" />
         </button>
+        {added && (
+          <div className="absolute bottom-4 right-4 mb-14 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
+            Added to cart
+          </div>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5 md:p-6">
         <h3 className="font-display text-2xl leading-tight">{product.name}</h3>
