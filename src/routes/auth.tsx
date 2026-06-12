@@ -61,11 +61,9 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "var(--gradient-soft)" }}>
       <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-elegant)]">
-        <Link to="/" className="flex items-center gap-2 mb-6">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <span className="font-bold tracking-tight">sales.io</span>
+        <Link to="/" className="flex flex-col items-center gap-1 mb-8">
+          <span className="font-display text-3xl tracking-tight">Magkudy</span>
+          <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground font-sans">Luxury Wears</span>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight">
           {mode === "login" ? "Welcome back" : "Create your admin account"}

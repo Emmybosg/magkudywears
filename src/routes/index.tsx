@@ -305,15 +305,12 @@ function Footer() {
   return (
     <footer className="bg-foreground text-background">
       <div className="mx-auto max-w-7xl px-5 md:px-8 py-16">
-        <h3 className="font-display text-6xl md:text-8xl leading-[0.95]">
-          sales<span className="italic" style={{
-            background: "var(--gradient-hero)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>.io</span>
+        <h3 className="font-display text-5xl md:text-7xl leading-[0.95]">
+          Magkudy
         </h3>
+        <p className="text-xs uppercase tracking-[0.35em] opacity-70 mt-2 font-sans">Luxury Wears</p>
         <div className="mt-12 flex flex-col gap-3 border-t border-background/20 pt-8 text-xs uppercase tracking-[0.2em] opacity-80 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} — Premium goods, delivered.</p>
+          <p>© {new Date().getFullYear()} — Premium fashion, delivered.</p>
           <p>Made with care in Nigeria 🇳🇬</p>
         </div>
       </div>

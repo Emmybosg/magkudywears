@@ -8,8 +8,8 @@ export type CartItem = {
   quantity: number;
 };
 
-const KEY = "salesio_cart_v1";
-const EVT = "salesio_cart_change";
+const KEY = "magkudy_cart_v1";
+const EVT = "magkudy_cart_change";
 
 function read(): CartItem[] {
   if (typeof window === "undefined") return [];
@@ -65,6 +65,6 @@ export function buildWhatsAppOrder(items: CartItem[], total: number) {
   const lines = items.map(
     (i) => `• ${i.name} × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}`,
   );
-  const msg = `Hello sales.io! I'd like to place an order:%0A%0A${lines.join("%0A")}%0A%0A*Total: ₦${total.toLocaleString()}*`;
+  const msg = `Hello Magkudy Luxury Wears! I'd like to place an order:%0A%0A${lines.join("%0A")}%0A%0A*Total: ₦${total.toLocaleString()}*`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 }

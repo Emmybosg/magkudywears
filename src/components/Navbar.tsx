@@ -17,11 +17,11 @@ export function Navbar() {
               className="flex h-10 w-10 items-center justify-center rounded-full text-primary-foreground text-lg font-display italic shadow-[var(--shadow-glow)] transition-transform group-hover:rotate-12"
               style={{ background: "var(--gradient-ember)" }}
             >
-              s
+              M
             </div>
-            <div className="leading-none">
-              <span className="font-display text-2xl tracking-tight">sales</span>
-              <span className="font-display italic text-2xl" style={{ color: "var(--accent)" }}>.io</span>
+            <div className="leading-[0.85]">
+              <span className="font-display text-xl tracking-tight">Magkudy</span>
+              <span className="block text-[9px] uppercase tracking-[0.3em] text-muted-foreground font-sans mt-0.5">Luxury Wears</span>
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-10 text-sm uppercase tracking-[0.18em] text-muted-foreground">
