@@ -43,7 +43,7 @@ function Hero() {
           {/* Headline cell */}
           <div className="col-span-6 md:col-span-4 row-span-3 rounded-[2rem] border border-border/70 bg-card p-6 md:p-10 flex flex-col justify-between relative overflow-hidden shadow-[var(--shadow-card)]">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--accent)" }} /> Est. Lagos · Nigeria
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--accent)" }} /> Est. Akwa Ibom · Nigeria
             </span>
             <h1 className="font-display text-[2.75rem] leading-[1.02] md:text-7xl lg:text-[5.5rem]">
               Beautiful
