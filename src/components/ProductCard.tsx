@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Plus, ArrowUpRight } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
