@@ -125,7 +125,7 @@ function Hero() {
 }
 
 function Marquee() {
-  const words = ["Curated", "·", "Hand-picked", "·", "Made in Nigeria", "·", "Shipped fast", "·", "Pay on delivery", "·"];
+  const words = ["Curated", "·", "Hand-picked", "·", "Made in Nigeria", "·", "Shipped fast", "·"];
   return (
     <div className="border-y border-border bg-foreground text-background overflow-hidden">
       <div className="flex gap-10 py-5 whitespace-nowrap animate-[marquee_30s_linear_infinite]">
