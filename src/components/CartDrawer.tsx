@@ -62,9 +62,9 @@ export function CartDrawer({ open, onClose }: { open: boolean; onClose: () => vo
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-semibold">₦{total.toLocaleString()}</span>
               </div>
-              {total < 50000 && (
+              {total < 100000 && (
                 <p className="text-xs text-muted-foreground">
-                  Add ₦{(50000 - total).toLocaleString()} more for free delivery.
+                  Add ₦{(100000 - total).toLocaleString()} more for free delivery.
                 </p>
               )}
               <a
