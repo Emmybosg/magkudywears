@@ -100,7 +100,7 @@ function Hero() {
 
           <div className="col-span-3 md:col-span-2 row-span-2 rounded-[2rem] border border-border/70 bg-card p-6 flex flex-col justify-between shadow-[var(--shadow-card)]">
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Free delivery</p>
-            <p className="font-display text-3xl md:text-4xl leading-tight">Orders over <span className="italic" style={{ color: "var(--primary)" }}>₦50k</span> ship on us.</p>
+            <p className="font-display text-3xl md:text-4xl leading-tight">Orders over <span className="italic" style={{ color: "var(--primary)" }}>₦100k</span> ship on us.</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Truck className="h-4 w-4" /> Nationwide · 2–4 days
             </div>
@@ -181,7 +181,7 @@ function Products({ products, loading }: { products: Product[]; loading: boolean
 
 const features = [
   { icon: ShieldCheck, title: "Secure orders", text: "Your details are protected end-to-end." },
-  { icon: Truck, title: "Fast shipping", text: "Free delivery on orders over ₦50,000." },
+  { icon: Truck, title: "Fast shipping", text: "Free delivery on orders over ₦100,000." },
   { icon: RotateCcw, title: "Easy returns", text: "30-day no-questions-asked returns." },
   { icon: Headset, title: "24/7 support", text: "Our team is always one message away." },
 ];
