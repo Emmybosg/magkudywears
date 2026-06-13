@@ -125,7 +125,7 @@ function Hero() {
 }
 
 function Marquee() {
-  const words = ["Curated", "·", "Hand-picked", "·", "Made in Nigeria", "·", "Shipped fast", "·"];
+  const words = ["Curated", "·", "Hand-picked", "·", "Made in Nigeria", "·", "No return after payment", "·", "Shipped fast", "·"];
   return (
     <div className="border-y border-border bg-foreground text-background overflow-hidden">
       <div className="flex gap-10 py-5 whitespace-nowrap animate-[marquee_30s_linear_infinite]">
@@ -182,7 +182,7 @@ function Products({ products, loading }: { products: Product[]; loading: boolean
 const features = [
   { icon: ShieldCheck, title: "Secure orders", text: "Your details are protected end-to-end." },
   { icon: Truck, title: "Fast shipping", text: "Free delivery on orders over ₦100,000." },
-  { icon: RotateCcw, title: "Easy returns", text: "30-day no-questions-asked returns." },
+  { icon: ShieldCheck, title: "Final sale", text: "No return of goods after payment." },
   { icon: Headset, title: "24/7 support", text: "Our team is always one message away." },
 ];
 
