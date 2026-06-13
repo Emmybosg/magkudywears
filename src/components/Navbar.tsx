@@ -32,10 +32,10 @@ export function Navbar() {
           <div className="flex items-center gap-2 md:gap-3">
             <Link
               to="/admin"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs uppercase tracking-widest font-medium hover:bg-muted transition"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 text-xs uppercase tracking-widest font-medium hover:bg-muted transition"
             >
               <Shield className="h-3.5 w-3.5 text-primary" />
-              Admin
+              <span className="hidden sm:inline">Admin</span>
             </Link>
             <button
               onClick={() => setOpen(true)}
