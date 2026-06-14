@@ -29,6 +29,46 @@ export default function Index() {
       <WhyUs />
       <Contact />
       <Footer />
+      <style>{`
+        @keyframes ember-flow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .ember-text {
+          background-size: 200% auto;
+          animation: ember-flow 6s ease-in-out infinite;
+        }
+        @keyframes float-soft {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-12px) rotate(8deg); }
+        }
+        .float-soft { animation: float-soft 8s ease-in-out infinite; }
+
+        .shine-btn { position: relative; overflow: hidden; }
+        .shine-btn::after {
+          content: ""; position: absolute; inset: 0;
+          background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%);
+          transform: translateX(-120%); transition: transform 0.9s ease;
+        }
+        .shine-btn:hover::after { transform: translateX(120%); }
+
+        .tilt-card { transition: transform 0.6s cubic-bezier(0.23,1,0.32,1), box-shadow 0.6s ease; }
+        .tilt-card:hover { transform: translateY(-6px); }
+
+        .underline-link { position: relative; }
+        .underline-link::after {
+          content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%;
+          background: currentColor; transform: scaleX(0); transform-origin: right;
+          transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+        }
+        .underline-link:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        @keyframes reveal-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal-up { animation: reveal-up 0.9s cubic-bezier(0.23,1,0.32,1) both; }
+      `}</style>
     </div>
   );
 }
@@ -43,12 +83,12 @@ function Hero() {
           {/* Headline cell */}
           <div className="col-span-6 md:col-span-4 row-span-3 rounded-[2rem] border border-border/70 bg-card p-6 md:p-10 flex flex-col justify-between relative overflow-hidden shadow-[var(--shadow-card)]">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--accent)" }} /> Est. Akwa Ibom · Nigeria
+              <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: "var(--accent)" }} /> Est. Akwa Ibom · Nigeria
             </span>
             <h1 className="font-display text-[2.75rem] leading-[1.02] md:text-7xl lg:text-[5.5rem]">
               Beautiful
               <br />
-              <span className="italic" style={{
+              <span className="italic ember-text inline-block" style={{
                 background: "var(--gradient-hero)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -59,64 +99,66 @@ function Hero() {
             <div className="flex flex-wrap gap-3">
               <a
                 href="#products"
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.02] transition"
+                className="shine-btn group/cta inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.03] hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
                 style={{ background: "var(--gradient-ember)" }}
               >
-                Browse the edit <ArrowRight className="h-4 w-4" />
+                <span className="relative z-10 inline-flex items-center gap-2">Browse the edit <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1" /></span>
               </a>
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-background/60 backdrop-blur px-6 py-3 text-sm font-semibold hover:bg-background transition"
+                className="group/wa inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-background/60 backdrop-blur px-6 py-3 text-sm font-semibold hover:bg-background hover:-translate-y-0.5 hover:shadow-md active:scale-95 transition-all duration-300"
               >
-                <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
+                <MessageCircle className="h-4 w-4 transition-transform duration-300 group-hover/wa:scale-110 group-hover/wa:rotate-[-8deg]" /> Chat on WhatsApp
               </a>
             </div>
-            <Sparkles className="absolute -right-6 -top-6 h-40 w-40 text-primary/5" />
+            <Sparkles className="absolute -right-6 -top-6 h-40 w-40 text-primary/10 float-soft pointer-events-none" />
           </div>
 
           {/* Hero image cell */}
-          <div className="col-span-3 md:col-span-2 row-span-3 rounded-[2rem] overflow-hidden relative shadow-[var(--shadow-elegant)]">
-            <img src={hero} alt="Featured" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="group/img col-span-3 md:col-span-2 row-span-3 rounded-[2rem] overflow-hidden relative shadow-[var(--shadow-elegant)] cursor-pointer">
+            <img src={hero} alt="Featured" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover/img:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 text-background">
+            <div className="absolute bottom-0 left-0 right-0 p-5 text-background transition-transform duration-500 group-hover/img:-translate-y-1">
               <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">This week</p>
               <p className="font-display italic text-2xl leading-tight mt-1">The Ember Edit</p>
             </div>
           </div>
 
           {/* Stat cells */}
-          <div className="col-span-3 md:col-span-2 row-span-2 rounded-[2rem] p-6 flex flex-col justify-between text-primary-foreground relative overflow-hidden" style={{ background: "var(--gradient-violet)" }}>
+          <div className="group/stat tilt-card col-span-3 md:col-span-2 row-span-2 rounded-[2rem] p-6 flex flex-col justify-between text-primary-foreground relative overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30" style={{ background: "var(--gradient-violet)" }}>
             <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">Trusted by</p>
             <div>
-              <p className="font-display text-5xl md:text-6xl leading-none">2,400+</p>
+              <p className="font-display text-5xl md:text-6xl leading-none transition-transform duration-500 group-hover/stat:scale-105 origin-left">2,400+</p>
               <p className="text-sm opacity-90 mt-1">Happy customers across Nigeria</p>
             </div>
             <div className="flex gap-0.5">
-              {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
+              {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current transition-transform duration-300 hover:scale-125" style={{ transitionDelay: `${i * 40}ms` }} />)}
             </div>
+            <div className="pointer-events-none absolute -right-16 -bottom-16 w-48 h-48 bg-white/10 rounded-full blur-3xl transition-transform duration-1000 group-hover/stat:scale-150" />
           </div>
 
-          <div className="col-span-3 md:col-span-2 row-span-2 rounded-[2rem] border border-border/70 bg-card p-6 flex flex-col justify-between shadow-[var(--shadow-card)]">
+          <div className="group/free tilt-card col-span-3 md:col-span-2 row-span-2 rounded-[2rem] border border-border/70 bg-card p-6 flex flex-col justify-between shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elegant)] hover:border-primary/30">
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Free delivery</p>
             <p className="font-display text-3xl md:text-4xl leading-tight">Orders over <span className="italic" style={{ color: "var(--primary)" }}>₦100k</span> ship on us.</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Truck className="h-4 w-4" /> Nationwide · 2–4 days
+              <Truck className="h-4 w-4 transition-transform duration-500 group-hover/free:translate-x-1" /> Nationwide · 2–4 days
             </div>
           </div>
 
-          <div className="col-span-6 md:col-span-2 row-span-2 rounded-[2rem] p-6 flex flex-col justify-between text-primary-foreground relative overflow-hidden" style={{ background: "var(--gradient-ember)" }}>
+          <div className="group/nc tilt-card col-span-6 md:col-span-2 row-span-2 rounded-[2rem] p-6 flex flex-col justify-between text-primary-foreground relative overflow-hidden hover:shadow-2xl hover:shadow-pink-500/30" style={{ background: "var(--gradient-ember)" }}>
             <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">No checkout</p>
             <p className="font-display text-3xl leading-tight italic">Order in one message.</p>
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex w-fit items-center gap-2 rounded-full bg-background/20 backdrop-blur px-4 py-2 text-xs font-semibold hover:bg-background/30 transition"
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-background/20 backdrop-blur px-4 py-2 text-xs font-semibold hover:bg-background/30 hover:translate-x-1 transition-all duration-300"
             >
-              <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+              <MessageCircle className="h-3.5 w-3.5 transition-transform group-hover/nc:rotate-[-10deg]" /> WhatsApp
             </a>
+            <div className="pointer-events-none absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl transition-transform duration-1000 group-hover/nc:scale-150" />
           </div>
         </div>
       </div>
