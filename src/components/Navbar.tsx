@@ -25,27 +25,27 @@ export function Navbar() {
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-10 text-sm uppercase tracking-[0.18em] text-muted-foreground">
-            <a href="#products" className="hover:text-foreground transition-colors">Shop</a>
-            <a href="#why" className="hover:text-foreground transition-colors">Why</a>
-            <a href="#contact" className="hover:text-foreground transition-colors">Contact</a>
+            <a href="#products" className="story-link hover:text-foreground transition-colors">Shop</a>
+            <a href="#why" className="story-link hover:text-foreground transition-colors">Why</a>
+            <a href="#contact" className="story-link hover:text-foreground transition-colors">Contact</a>
           </nav>
           <div className="flex items-center gap-2 md:gap-3">
             <Link
               to="/admin"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 text-xs uppercase tracking-widest font-medium hover:bg-muted transition"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 text-xs uppercase tracking-widest font-medium hover:bg-muted hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300"
             >
               <Shield className="h-3.5 w-3.5 text-primary" />
               <span className="hidden sm:inline">Admin</span>
             </Link>
             <button
               onClick={() => setOpen(true)}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-105 transition"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-110 active:scale-95 transition-all duration-300 group"
               style={{ background: "var(--gradient-ember)" }}
               aria-label="Open cart"
             >
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-5 w-5 transition-transform duration-300 group-hover:-rotate-12" />
               {count > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-background">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-background animate-in zoom-in duration-300">
                   {count}
                 </span>
               )}
