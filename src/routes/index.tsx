@@ -306,11 +306,13 @@ function Contact() {
           </div>
           <button
             type="submit"
-            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.01] transition"
+            className="shine-btn group/sub mt-2 inline-flex items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
             style={{ background: "var(--gradient-ember)" }}
           >
-            <MessageCircle className="h-4 w-4" />
-            {sent ? "Sent! Continue on WhatsApp" : "Send message"}
+            <span className="relative z-10 inline-flex items-center gap-2">
+              <MessageCircle className="h-4 w-4 transition-transform duration-300 group-hover/sub:rotate-[-8deg]" />
+              {sent ? "Sent! Continue on WhatsApp" : "Send message"}
+            </span>
           </button>
         </form>
       </div>
