@@ -104,23 +104,30 @@ export function ProductCard({ product }: { product: Product }) {
         role="dialog"
         aria-modal="true"
         aria-label={product.name}
-        className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/90 backdrop-blur-md p-4 md:p-8 animate-in fade-in duration-300"
+        className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-foreground/90 backdrop-blur-md p-4 pt-20 md:p-8 md:pt-20 animate-in fade-in duration-300"
       >
         <button
-          onClick={() => setOpen(false)}
+          onClick={(e) => { e.stopPropagation(); setOpen(false); }}
+          aria-label="Back to products"
+          className="fixed top-4 left-4 z-[110] inline-flex items-center gap-2 rounded-full border border-background/30 bg-background/15 px-4 py-2.5 text-sm font-semibold text-background backdrop-blur-md shadow-lg hover:bg-background/25 hover:scale-105 transition"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); setOpen(false); }}
           aria-label="Close"
-          className="absolute top-5 right-5 flex h-11 w-11 items-center justify-center rounded-full bg-background/10 text-background hover:bg-background/20 transition"
+          className="fixed top-4 right-4 z-[110] flex h-11 w-11 items-center justify-center rounded-full bg-background/15 text-background border border-background/30 backdrop-blur-md hover:bg-background/25 transition"
         >
           <X className="h-5 w-5" />
         </button>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative flex max-h-full w-full max-w-5xl flex-col items-center gap-4"
+          className="relative flex w-full max-w-5xl flex-col items-center gap-4"
         >
           <img
             src={product.image_url}
             alt={product.name}
-            className="max-h-[80vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl animate-in zoom-in-95 duration-300"
+            className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl animate-in zoom-in-95 duration-300"
           />
           <div className="flex w-full flex-col gap-4 px-2 text-background">
             <div className="flex w-full flex-wrap items-center justify-between gap-4">
@@ -140,12 +147,6 @@ export function ProductCard({ product }: { product: Product }) {
                 </button>
               )}
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="mx-auto inline-flex items-center gap-2 rounded-full border border-background/30 bg-background/10 px-5 py-2.5 text-sm font-medium text-background backdrop-blur-sm transition hover:bg-background/20 hover:scale-105"
-            >
-              <ArrowLeft className="h-4 w-4" /> Back to products
-            </button>
           </div>
         </div>
       </div>
