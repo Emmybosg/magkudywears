@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, ArrowUpRight, X } from "lucide-react";
+import { Plus, ArrowUpRight, X, ArrowLeft } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
 export type Product = {
