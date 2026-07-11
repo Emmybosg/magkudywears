@@ -122,22 +122,30 @@ export function ProductCard({ product }: { product: Product }) {
             alt={product.name}
             className="max-h-[80vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl animate-in zoom-in-95 duration-300"
           />
-          <div className="flex w-full flex-wrap items-center justify-between gap-4 px-2 text-background">
-            <div>
-              <h3 className="font-display text-2xl md:text-3xl">{product.name}</h3>
-              <p className="font-display text-lg opacity-90">
-                <span className="opacity-70 mr-0.5">₦</span>{Number(product.price).toLocaleString()}
-              </p>
+          <div className="flex w-full flex-col gap-4 px-2 text-background">
+            <div className="flex w-full flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl">{product.name}</h3>
+                <p className="font-display text-lg opacity-90">
+                  <span className="opacity-70 mr-0.5">₦</span>{Number(product.price).toLocaleString()}
+                </p>
+              </div>
+              {product.in_stock && (
+                <button
+                  onClick={handleAdd}
+                  className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-105 transition"
+                  style={{ background: "var(--gradient-ember)" }}
+                >
+                  <Plus className="h-4 w-4" /> {added ? "Added" : "Add to cart"}
+                </button>
+              )}
             </div>
-            {product.in_stock && (
-              <button
-                onClick={handleAdd}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-105 transition"
-                style={{ background: "var(--gradient-ember)" }}
-              >
-                <Plus className="h-4 w-4" /> {added ? "Added" : "Add to cart"}
-              </button>
-            )}
+            <button
+              onClick={() => setOpen(false)}
+              className="mx-auto inline-flex items-center gap-2 rounded-full border border-background/30 bg-background/10 px-5 py-2.5 text-sm font-medium text-background backdrop-blur-sm transition hover:bg-background/20 hover:scale-105"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back to products
+            </button>
           </div>
         </div>
       </div>
