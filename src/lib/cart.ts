@@ -62,12 +62,10 @@ export function useCart() {
 export const WHATSAPP_NUMBER = "2349134211076"; // Edit to your number (no + sign)
 
 export function buildWhatsAppOrder(items: CartItem[], total: number) {
-  const lines = items.map(
-    (i) => {
-      const img = i.image_url ? `%0A${encodeURIComponent(i.image_url)}` : "";
-      return `• ${i.name} × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}${img}`;
-    },
-  );
-  const msg = `Hello Magkudy Luxury Wears! I'd like to place an order:%0A%0A${lines.join("%0A")}%0A%0A*Total: ₦${total.toLocaleString()}*`;
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+  const lines = items.map((i) => {
+    const img = i.image_url ? `\n${i.image_url}` : "";
+    return `• ${i.name} × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}${img}`;
+  });
+  const raw = `Hello Magkudy Luxury Wears! I'd like to place an order:\n\n${lines.join("\n\n")}\n\n*Total: ₦${total.toLocaleString()}*`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(raw)}`;
 }
