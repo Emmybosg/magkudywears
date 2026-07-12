@@ -63,7 +63,10 @@ export const WHATSAPP_NUMBER = "2349134211076"; // Edit to your number (no + sig
 
 export function buildWhatsAppOrder(items: CartItem[], total: number) {
   const lines = items.map(
-    (i) => `• ${i.name} × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}`,
+    (i) => {
+      const img = i.image_url ? `%0A${encodeURIComponent(i.image_url)}` : "";
+      return `• ${i.name} × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}${img}`;
+    },
   );
   const msg = `Hello Magkudy Luxury Wears! I'd like to place an order:%0A%0A${lines.join("%0A")}%0A%0A*Total: ₦${total.toLocaleString()}*`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
