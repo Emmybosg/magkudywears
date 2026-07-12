@@ -2,7 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, LogOut, Trash2, Upload, Plus } from "lucide-react";
+import { Sparkles, LogOut, Trash2, Upload, Plus, Pencil, X, Check } from "lucide-react";
 import type { Product } from "@/components/ProductCard";
 
 export default function Admin() {
@@ -206,6 +206,12 @@ function Input({ label, value, onChange, type = "text" }: { label: string; value
 
 function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
   const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(p.name);
+  const [description, setDescription] = useState(p.description ?? "");
+  const [price, setPrice] = useState(String(p.price));
+  const [file, setFile] = useState<File | null>(null);
+  const [err, setErr] = useState<string | null>(null);
   const del = async () => {
     if (!confirm(`Delete "${p.name}"?`)) return;
     setBusy(true);
@@ -219,23 +225,99 @@ function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
     setBusy(false);
     onChanged();
   };
+  const save = async () => {
+    setErr(null);
+    setBusy(true);
+    try {
+      let image_url = p.image_url;
+      if (file) {
+        const ext = file.name.split(".").pop();
+        const path = `${crypto.randomUUID()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("product-images").upload(path, file);
+        if (upErr) throw upErr;
+        const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+        image_url = data.publicUrl;
+      }
+      const { error } = await supabase.from("products").update({
+        name,
+        description: description || null,
+        price: Number(price),
+        image_url,
+      }).eq("id", p.id);
+      if (error) throw error;
+      setEditing(false);
+      setFile(null);
+      onChanged();
+    } catch (e: any) {
+      setErr(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const cancel = () => {
+    setName(p.name);
+    setDescription(p.description ?? "");
+    setPrice(String(p.price));
+    setFile(null);
+    setErr(null);
+    setEditing(false);
+  };
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       <div className="aspect-square bg-muted">
         {p.image_url && <img src={p.image_url} alt={p.name} className="h-full w-full object-cover" />}
       </div>
-      <div className="p-4 space-y-2">
-        <p className="font-semibold truncate">{p.name}</p>
-        <p className="text-sm text-muted-foreground">₦{Number(p.price).toLocaleString()}</p>
-        <div className="flex items-center justify-between gap-2 pt-2">
-          <button onClick={toggle} disabled={busy} className="text-xs rounded-full border border-border px-3 py-1 hover:bg-muted">
-            {p.in_stock ? "In stock" : "Sold out"}
-          </button>
-          <button onClick={del} disabled={busy} className="text-destructive hover:opacity-80">
-            <Trash2 className="h-4 w-4" />
-          </button>
+      {editing ? (
+        <div className="p-4 space-y-3">
+          <input
+            value={name} onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            placeholder="Name"
+          />
+          <input
+            type="number" value={price} onChange={(e) => setPrice(e.target.value)}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            placeholder="Price"
+          />
+          <textarea
+            value={description} onChange={(e) => setDescription(e.target.value)} rows={2}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            placeholder="Description"
+          />
+          <label className="flex items-center gap-2 cursor-pointer rounded-lg border border-dashed border-border bg-background px-3 py-2 text-xs hover:bg-muted">
+            <Upload className="h-3.5 w-3.5" />
+            <span className="text-muted-foreground truncate">{file?.name ?? "Replace image (optional)"}</span>
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+          </label>
+          {err && <p className="text-xs text-destructive">{err}</p>}
+          <div className="flex items-center gap-2 pt-1">
+            <button onClick={save} disabled={busy} className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50">
+              <Check className="h-3.5 w-3.5" /> {busy ? "Saving…" : "Save"}
+            </button>
+            <button onClick={cancel} disabled={busy} className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs hover:bg-muted">
+              <X className="h-3.5 w-3.5" /> Cancel
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="p-4 space-y-2">
+          <p className="font-semibold truncate">{p.name}</p>
+          <p className="text-sm text-muted-foreground">₦{Number(p.price).toLocaleString()}</p>
+          <div className="flex items-center justify-between gap-2 pt-2">
+            <button onClick={toggle} disabled={busy} className="text-xs rounded-full border border-border px-3 py-1 hover:bg-muted">
+              {p.in_stock ? "In stock" : "Sold out"}
+            </button>
+            <div className="flex items-center gap-3">
+              <button onClick={() => setEditing(true)} disabled={busy} className="text-muted-foreground hover:text-foreground" aria-label="Edit">
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button onClick={del} disabled={busy} className="text-destructive hover:opacity-80" aria-label="Delete">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
