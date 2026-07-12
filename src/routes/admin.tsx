@@ -308,8 +308,8 @@ function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
               {p.in_stock ? "In stock" : "Sold out"}
             </button>
             <div className="flex items-center gap-3">
-              <button onClick={() => setEditing(true)} disabled={busy} className="text-muted-foreground hover:text-foreground" aria-label="Edit">
-                <Pencil className="h-4 w-4" />
+              <button onClick={() => setEditing(true)} disabled={busy} className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground hover:opacity-90">
+                <Pencil className="h-3.5 w-3.5" /> Edit
               </button>
               <button onClick={del} disabled={busy} className="text-destructive hover:opacity-80" aria-label="Delete">
                 <Trash2 className="h-4 w-4" />
