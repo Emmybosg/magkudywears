@@ -282,7 +282,7 @@ function Contact() {
             <br />
             <span className="italic">your thing.</span>
           </h2>
-          <p className="mt-6 text-base opacity-90 max-w-sm">Drop us a line — or skip the form and ping us on WhatsApp directly. We reply within the hour.</p>
+          <p className="mt-6 text-base opacity-90 max-w-sm">Drop us a line — or skip the form and ping us on WhatsApp directly. We reply within the hour. Ask about custom designs for men and women.</p>
           <div className="mt-10 flex items-center gap-3 text-sm">
             <MessageCircle className="h-5 w-5" />
             <span className="opacity-90">+234 913 421 1076</span>
