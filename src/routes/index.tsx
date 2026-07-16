@@ -113,6 +113,14 @@ function Hero() {
                 <MessageCircle className="h-4 w-4 transition-transform duration-300 group-hover/wa:scale-110 group-hover/wa:rotate-[-8deg]" /> Chat on WhatsApp
               </a>
             </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                <Scissors className="h-3 w-3 text-primary" /> Custom requests open
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                <Users className="h-3 w-3 text-primary" /> Men & Women
+              </span>
+            </div>
             <Sparkles className="absolute -right-6 -top-6 h-40 w-40 text-primary/10 float-soft pointer-events-none" />
           </div>
 
