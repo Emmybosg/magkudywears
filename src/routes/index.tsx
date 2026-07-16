@@ -222,9 +222,9 @@ function Products({ products, loading }: { products: Product[]; loading: boolean
 }
 
 const features = [
-  { icon: ShieldCheck, title: "Secure orders", text: "Your details are protected end-to-end." },
+  { icon: Scissors, title: "Custom designs", text: "Have a style in mind? We bring your ideas to life — clothes and designs made just for you." },
+  { icon: Users, title: "Men & Women", text: "Curated pieces and bespoke tailoring for everyone." },
   { icon: Truck, title: "Fast shipping", text: "Free delivery on orders over ₦100,000." },
-  { icon: ShieldCheck, title: "Final sale", text: "No return of goods after payment." },
   { icon: Headset, title: "24/7 support", text: "Our team is always one message away." },
 ];
 
