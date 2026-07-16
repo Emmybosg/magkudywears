@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, ArrowRight, Star, Sparkles } from "lucide-react";
+import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, ArrowRight, Star, Sparkles, Scissors, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { ProductCard, type Product } from "@/components/ProductCard";
@@ -113,6 +113,14 @@ function Hero() {
                 <MessageCircle className="h-4 w-4 transition-transform duration-300 group-hover/wa:scale-110 group-hover/wa:rotate-[-8deg]" /> Chat on WhatsApp
               </a>
             </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                <Scissors className="h-3 w-3 text-primary" /> Custom requests open
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                <Users className="h-3 w-3 text-primary" /> Men & Women
+              </span>
+            </div>
             <Sparkles className="absolute -right-6 -top-6 h-40 w-40 text-primary/10 float-soft pointer-events-none" />
           </div>
 
@@ -167,7 +175,7 @@ function Hero() {
 }
 
 function Marquee() {
-  const words = ["Curated", "·", "Hand-picked", "·", "Made in Nigeria", "·", "No return after payment", "·", "Shipped fast", "·"];
+  const words = ["Curated", "·", "Hand-picked", "·", "Made in Nigeria", "·", "Custom designs", "·", "Men & Women", "·", "Shipped fast", "·"];
   return (
     <div className="border-y border-border bg-foreground text-background overflow-hidden">
       <div className="flex gap-10 py-5 whitespace-nowrap animate-[marquee_30s_linear_infinite]">
@@ -198,7 +206,7 @@ function Products({ products, loading }: { products: Product[]; loading: boolean
             }}>this season.</span>
           </h2>
         </div>
-        <p className="md:max-w-xs text-muted-foreground">A small, considered selection. Every piece chosen for craft, story, and the joy it brings home.</p>
+        <p className="md:max-w-xs text-muted-foreground">A small, considered selection. Every piece chosen for craft, story, and the joy it brings home. Want something unique? We also take custom requests for men and women.</p>
       </div>
       {loading ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -222,9 +230,9 @@ function Products({ products, loading }: { products: Product[]; loading: boolean
 }
 
 const features = [
-  { icon: ShieldCheck, title: "Secure orders", text: "Your details are protected end-to-end." },
+  { icon: Scissors, title: "Custom designs", text: "Have a style in mind? We bring your ideas to life — clothes and designs made just for you." },
+  { icon: Users, title: "Men & Women", text: "Curated pieces and bespoke tailoring for everyone." },
   { icon: Truck, title: "Fast shipping", text: "Free delivery on orders over ₦100,000." },
-  { icon: ShieldCheck, title: "Final sale", text: "No return of goods after payment." },
   { icon: Headset, title: "24/7 support", text: "Our team is always one message away." },
 ];
 
@@ -282,7 +290,7 @@ function Contact() {
             <br />
             <span className="italic">your thing.</span>
           </h2>
-          <p className="mt-6 text-base opacity-90 max-w-sm">Drop us a line — or skip the form and ping us on WhatsApp directly. We reply within the hour.</p>
+          <p className="mt-6 text-base opacity-90 max-w-sm">Drop us a line — or skip the form and ping us on WhatsApp directly. We reply within the hour. Ask about custom designs for men and women.</p>
           <div className="mt-10 flex items-center gap-3 text-sm">
             <MessageCircle className="h-5 w-5" />
             <span className="opacity-90">+234 913 421 1076</span>
