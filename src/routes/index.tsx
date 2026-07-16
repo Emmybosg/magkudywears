@@ -206,7 +206,7 @@ function Products({ products, loading }: { products: Product[]; loading: boolean
             }}>this season.</span>
           </h2>
         </div>
-        <p className="md:max-w-xs text-muted-foreground">A small, considered selection. Every piece chosen for craft, story, and the joy it brings home.</p>
+        <p className="md:max-w-xs text-muted-foreground">A small, considered selection. Every piece chosen for craft, story, and the joy it brings home. Want something unique? We also take custom requests for men and women.</p>
       </div>
       {loading ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
