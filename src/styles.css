@@ -167,3 +167,26 @@
     letter-spacing: -0.02em;
   }
 }
+
+/* Performance: smoother scrolling and cheaper offscreen rendering */
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Skip layout/paint work for offscreen sections during scroll */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+
+img { content-visibility: auto; }

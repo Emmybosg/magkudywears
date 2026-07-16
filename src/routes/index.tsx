@@ -25,10 +25,10 @@ export default function Index() {
       <Navbar />
       <Hero />
       <Marquee />
-      <Products products={products} loading={isLoading} />
-      <WhyUs />
-      <Contact />
-      <Footer />
+      <div className="cv-auto"><Products products={products} loading={isLoading} /></div>
+      <div className="cv-auto"><WhyUs /></div>
+      <div className="cv-auto"><Contact /></div>
+      <div className="cv-auto"><Footer /></div>
       <style>{`
         @keyframes ember-flow {
           0%, 100% { background-position: 0% 50%; }
@@ -126,7 +126,13 @@ function Hero() {
 
           {/* Hero image cell */}
           <div className="group/img col-span-3 md:col-span-2 row-span-3 rounded-[2rem] overflow-hidden relative shadow-[var(--shadow-elegant)] cursor-pointer">
-            <img src={hero} alt="Featured" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover/img:scale-110" />
+            <img
+              src={hero}
+              alt="Featured"
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover/img:scale-110"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-5 text-background transition-transform duration-500 group-hover/img:-translate-y-1">
               <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">This week</p>
