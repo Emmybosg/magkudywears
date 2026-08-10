@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Plus, ArrowUpRight, X, ArrowLeft } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
 export type Product = {
@@ -8,6 +8,7 @@ export type Product = {
   description: string | null;
   price: number;
   image_url: string | null;
+  images?: string[] | null;
   in_stock: boolean;
 };
 
@@ -15,18 +16,37 @@ export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [origin, setOrigin] = useState("50% 50%");
+
+  const gallery = useMemo(
+    () => Array.from(new Set([product.image_url, ...(product.images ?? [])].filter(Boolean) as string[])),
+    [product.image_url, product.images]
+  );
+  const cover = gallery[0];
+  const current = gallery[index] ?? cover;
 
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % gallery.length);
+      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + gallery.length) % gallery.length);
+    };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, gallery.length]);
+
+  useEffect(() => {
+    setZoom(1);
+    setOrigin("50% 50%");
+  }, [index, open]);
 
   const handleAdd = () => {
     add({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
@@ -39,13 +59,13 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[var(--shadow-card)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-elegant)] hover:border-transparent">
       <button
         type="button"
-        onClick={() => product.image_url && setOpen(true)}
+        onClick={() => { if (cover) { setIndex(0); setOpen(true); } }}
         aria-label={`View ${product.name}`}
         className="relative aspect-[4/5] overflow-hidden bg-muted text-left cursor-zoom-in"
       >
-        {product.image_url ? (
+        {cover ? (
           <img
-            src={product.image_url}
+            src={cover}
             alt={product.name}
             loading="lazy"
             decoding="async"
@@ -55,6 +75,11 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="flex h-full items-center justify-center text-muted-foreground text-sm">No image</div>
         )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        {gallery.length > 1 && (
+          <span className="absolute top-4 right-4 rounded-full bg-foreground/70 px-2.5 py-1 text-[10px] font-semibold text-background backdrop-blur-md">
+            {gallery.length} photos
+          </span>
+        )}
         {!product.in_stock && (
           <span className="absolute top-4 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">
             Sold out
@@ -99,7 +124,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
-    {open && product.image_url && (
+    {open && current && (
       <div
         onClick={() => setOpen(false)}
         role="dialog"
@@ -125,11 +150,58 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={(e) => e.stopPropagation()}
           className="relative flex w-full max-w-5xl flex-col items-center gap-4"
         >
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl animate-in zoom-in-95 duration-300"
-          />
+          <div className="relative w-full overflow-hidden rounded-2xl">
+            <img
+              src={current}
+              alt={`${product.name} — photo ${index + 1}`}
+              onClick={(e) => {
+                const r = (e.currentTarget as HTMLImageElement).getBoundingClientRect();
+                setOrigin(`${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`);
+                setZoom((z) => (z > 1 ? 1 : 2.5));
+              }}
+              style={{ transform: `scale(${zoom})`, transformOrigin: origin }}
+              className={`mx-auto max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl transition-transform duration-500 ${zoom > 1 ? "cursor-zoom-out" : "cursor-zoom-in"}`}
+            />
+            <button
+              onClick={() => setZoom((z) => (z > 1 ? 1 : 2.5))}
+              aria-label={zoom > 1 ? "Zoom out" : "Zoom in"}
+              className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full border border-background/30 bg-foreground/50 text-background backdrop-blur-md hover:bg-foreground/70 transition"
+            >
+              {zoom > 1 ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
+            </button>
+            {gallery.length > 1 && (
+              <>
+                <button
+                  onClick={() => setIndex((i) => (i - 1 + gallery.length) % gallery.length)}
+                  aria-label="Previous photo"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border border-background/30 bg-foreground/50 text-background backdrop-blur-md hover:bg-foreground/70 transition"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => setIndex((i) => (i + 1) % gallery.length)}
+                  aria-label="Next photo"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border border-background/30 bg-foreground/50 text-background backdrop-blur-md hover:bg-foreground/70 transition"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
+          </div>
+          {gallery.length > 1 && (
+            <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
+              {gallery.map((src, i) => (
+                <button
+                  key={src}
+                  onClick={() => setIndex(i)}
+                  aria-label={`Photo ${i + 1}`}
+                  className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition ${i === index ? "border-background" : "border-background/20 opacity-60 hover:opacity-100"}`}
+                >
+                  <img src={src} alt="" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex w-full flex-col gap-4 px-2 text-background">
             <div className="flex w-full flex-wrap items-center justify-between gap-4">
               <div>

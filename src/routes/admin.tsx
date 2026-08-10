@@ -119,11 +119,23 @@ function CenteredMsg({ children }: { children: React.ReactNode }) {
   );
 }
 
+async function uploadAll(files: File[]): Promise<string[]> {
+  const urls: string[] = [];
+  for (const file of files) {
+    const ext = file.name.split(".").pop();
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(path, file);
+    if (error) throw error;
+    urls.push(supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl);
+  }
+  return urls;
+}
+
 function NewProduct({ onCreated }: { onCreated: () => void }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -132,23 +144,16 @@ function NewProduct({ onCreated }: { onCreated: () => void }) {
     setErr(null);
     setBusy(true);
     try {
-      let image_url: string | null = null;
-      if (file) {
-        const ext = file.name.split(".").pop();
-        const path = `${crypto.randomUUID()}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("product-images").upload(path, file);
-        if (upErr) throw upErr;
-        const { data } = supabase.storage.from("product-images").getPublicUrl(path);
-        image_url = data.publicUrl;
-      }
+      const urls = await uploadAll(files);
       const { error } = await supabase.from("products").insert({
         name,
         description: description || null,
         price: Number(price),
-        image_url,
+        image_url: urls[0] ?? null,
+        images: urls,
       });
       if (error) throw error;
-      setName(""); setDescription(""); setPrice(""); setFile(null);
+      setName(""); setDescription(""); setPrice(""); setFiles([]);
       onCreated();
     } catch (e: any) {
       setErr(e.message);
@@ -173,11 +178,11 @@ function NewProduct({ onCreated }: { onCreated: () => void }) {
           />
         </div>
         <div className="md:col-span-2">
-          <label className="text-sm font-medium">Image</label>
+          <label className="text-sm font-medium">Images (you can select several)</label>
           <label className="mt-1.5 flex items-center gap-2 cursor-pointer rounded-xl border border-dashed border-border bg-background px-4 py-3 text-sm hover:bg-muted">
             <Upload className="h-4 w-4" />
-            <span className="text-muted-foreground">{file?.name ?? "Choose image"}</span>
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+            <span className="text-muted-foreground">{files.length ? `${files.length} image${files.length > 1 ? "s" : ""} selected` : "Choose images"}</span>
+            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => setFiles(Array.from(e.target.files ?? []))} />
           </label>
         </div>
         {err && <p className="text-sm text-destructive md:col-span-2">{err}</p>}
@@ -210,7 +215,7 @@ function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
   const [name, setName] = useState(p.name);
   const [description, setDescription] = useState(p.description ?? "");
   const [price, setPrice] = useState(String(p.price));
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const del = async () => {
     if (!confirm(`Delete "${p.name}"?`)) return;
@@ -229,24 +234,19 @@ function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
     setErr(null);
     setBusy(true);
     try {
-      let image_url = p.image_url;
-      if (file) {
-        const ext = file.name.split(".").pop();
-        const path = `${crypto.randomUUID()}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("product-images").upload(path, file);
-        if (upErr) throw upErr;
-        const { data } = supabase.storage.from("product-images").getPublicUrl(path);
-        image_url = data.publicUrl;
-      }
+      const existing = (p.images ?? []).filter(Boolean);
+      const uploaded = files.length ? await uploadAll(files) : [];
+      const gallery = Array.from(new Set([...(p.image_url ? [p.image_url] : []), ...existing, ...uploaded]));
       const { error } = await supabase.from("products").update({
         name,
         description: description || null,
         price: Number(price),
-        image_url,
+        image_url: gallery[0] ?? null,
+        images: gallery,
       }).eq("id", p.id);
       if (error) throw error;
       setEditing(false);
-      setFile(null);
+      setFiles([]);
       onChanged();
     } catch (e: any) {
       setErr(e.message);
@@ -258,7 +258,7 @@ function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
     setName(p.name);
     setDescription(p.description ?? "");
     setPrice(String(p.price));
-    setFile(null);
+    setFiles([]);
     setErr(null);
     setEditing(false);
   };
@@ -286,8 +286,8 @@ function AdminRow({ p, onChanged }: { p: Product; onChanged: () => void }) {
           />
           <label className="flex items-center gap-2 cursor-pointer rounded-lg border border-dashed border-border bg-background px-3 py-2 text-xs hover:bg-muted">
             <Upload className="h-3.5 w-3.5" />
-            <span className="text-muted-foreground truncate">{file?.name ?? "Replace image (optional)"}</span>
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+            <span className="text-muted-foreground truncate">{files.length ? `${files.length} new image${files.length > 1 ? "s" : ""}` : "Add more images (optional)"}</span>
+            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => setFiles(Array.from(e.target.files ?? []))} />
           </label>
           {err && <p className="text-xs text-destructive">{err}</p>}
           <div className="flex items-center gap-2 pt-1">
