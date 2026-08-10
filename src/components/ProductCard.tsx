@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
@@ -124,7 +125,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
-    {open && current && (
+    {open && current && createPortal(
       <div
         onClick={() => setOpen(false)}
         role="dialog"
@@ -222,7 +223,8 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
           </div>
         </div>
-      </div>
+      </div>,
+      document.body
     )}
     </>
   );
