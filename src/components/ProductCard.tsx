@@ -124,7 +124,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
-    {open && product.image_url && (
+    {open && current && (
       <div
         onClick={() => setOpen(false)}
         role="dialog"
@@ -150,11 +150,58 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={(e) => e.stopPropagation()}
           className="relative flex w-full max-w-5xl flex-col items-center gap-4"
         >
-          <img
-            src={product.image_url}
-            alt={product.name}
-            className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl animate-in zoom-in-95 duration-300"
-          />
+          <div className="relative w-full overflow-hidden rounded-2xl">
+            <img
+              src={current}
+              alt={`${product.name} — photo ${index + 1}`}
+              onClick={(e) => {
+                const r = (e.currentTarget as HTMLImageElement).getBoundingClientRect();
+                setOrigin(`${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`);
+                setZoom((z) => (z > 1 ? 1 : 2.5));
+              }}
+              style={{ transform: `scale(${zoom})`, transformOrigin: origin }}
+              className={`mx-auto max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl transition-transform duration-500 ${zoom > 1 ? "cursor-zoom-out" : "cursor-zoom-in"}`}
+            />
+            <button
+              onClick={() => setZoom((z) => (z > 1 ? 1 : 2.5))}
+              aria-label={zoom > 1 ? "Zoom out" : "Zoom in"}
+              className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full border border-background/30 bg-foreground/50 text-background backdrop-blur-md hover:bg-foreground/70 transition"
+            >
+              {zoom > 1 ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
+            </button>
+            {gallery.length > 1 && (
+              <>
+                <button
+                  onClick={() => setIndex((i) => (i - 1 + gallery.length) % gallery.length)}
+                  aria-label="Previous photo"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border border-background/30 bg-foreground/50 text-background backdrop-blur-md hover:bg-foreground/70 transition"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => setIndex((i) => (i + 1) % gallery.length)}
+                  aria-label="Next photo"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border border-background/30 bg-foreground/50 text-background backdrop-blur-md hover:bg-foreground/70 transition"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
+          </div>
+          {gallery.length > 1 && (
+            <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
+              {gallery.map((src, i) => (
+                <button
+                  key={src}
+                  onClick={() => setIndex(i)}
+                  aria-label={`Photo ${i + 1}`}
+                  className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition ${i === index ? "border-background" : "border-background/20 opacity-60 hover:opacity-100"}`}
+                >
+                  <img src={src} alt="" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex w-full flex-col gap-4 px-2 text-background">
             <div className="flex w-full flex-wrap items-center justify-between gap-4">
               <div>
