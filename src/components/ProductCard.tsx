@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Plus, ArrowUpRight, X, ArrowLeft } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
 export type Product = {
@@ -8,6 +8,7 @@ export type Product = {
   description: string | null;
   price: number;
   image_url: string | null;
+  images?: string[] | null;
   in_stock: boolean;
 };
 
@@ -15,18 +16,37 @@ export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [origin, setOrigin] = useState("50% 50%");
+
+  const gallery = useMemo(
+    () => Array.from(new Set([product.image_url, ...(product.images ?? [])].filter(Boolean) as string[])),
+    [product.image_url, product.images]
+  );
+  const cover = gallery[0];
+  const current = gallery[index] ?? cover;
 
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % gallery.length);
+      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + gallery.length) % gallery.length);
+    };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, gallery.length]);
+
+  useEffect(() => {
+    setZoom(1);
+    setOrigin("50% 50%");
+  }, [index, open]);
 
   const handleAdd = () => {
     add({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
@@ -39,13 +59,13 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[var(--shadow-card)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-elegant)] hover:border-transparent">
       <button
         type="button"
-        onClick={() => product.image_url && setOpen(true)}
+        onClick={() => { if (cover) { setIndex(0); setOpen(true); } }}
         aria-label={`View ${product.name}`}
         className="relative aspect-[4/5] overflow-hidden bg-muted text-left cursor-zoom-in"
       >
-        {product.image_url ? (
+        {cover ? (
           <img
-            src={product.image_url}
+            src={cover}
             alt={product.name}
             loading="lazy"
             decoding="async"
@@ -55,6 +75,11 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="flex h-full items-center justify-center text-muted-foreground text-sm">No image</div>
         )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        {gallery.length > 1 && (
+          <span className="absolute top-4 right-4 rounded-full bg-foreground/70 px-2.5 py-1 text-[10px] font-semibold text-background backdrop-blur-md">
+            {gallery.length} photos
+          </span>
+        )}
         {!product.in_stock && (
           <span className="absolute top-4 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">
             Sold out
