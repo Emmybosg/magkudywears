@@ -125,7 +125,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
-    {open && current && (
+    {open && current && createPortal(
       <div
         onClick={() => setOpen(false)}
         role="dialog"
