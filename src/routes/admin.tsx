@@ -123,7 +123,7 @@ function NewProduct({ onCreated }: { onCreated: () => void }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -132,23 +132,16 @@ function NewProduct({ onCreated }: { onCreated: () => void }) {
     setErr(null);
     setBusy(true);
     try {
-      let image_url: string | null = null;
-      if (file) {
-        const ext = file.name.split(".").pop();
-        const path = `${crypto.randomUUID()}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("product-images").upload(path, file);
-        if (upErr) throw upErr;
-        const { data } = supabase.storage.from("product-images").getPublicUrl(path);
-        image_url = data.publicUrl;
-      }
+      const urls = await uploadAll(files);
       const { error } = await supabase.from("products").insert({
         name,
         description: description || null,
         price: Number(price),
-        image_url,
+        image_url: urls[0] ?? null,
+        images: urls,
       });
       if (error) throw error;
-      setName(""); setDescription(""); setPrice(""); setFile(null);
+      setName(""); setDescription(""); setPrice(""); setFiles([]);
       onCreated();
     } catch (e: any) {
       setErr(e.message);
@@ -173,11 +166,11 @@ function NewProduct({ onCreated }: { onCreated: () => void }) {
           />
         </div>
         <div className="md:col-span-2">
-          <label className="text-sm font-medium">Image</label>
+          <label className="text-sm font-medium">Images (you can select several)</label>
           <label className="mt-1.5 flex items-center gap-2 cursor-pointer rounded-xl border border-dashed border-border bg-background px-4 py-3 text-sm hover:bg-muted">
             <Upload className="h-4 w-4" />
-            <span className="text-muted-foreground">{file?.name ?? "Choose image"}</span>
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+            <span className="text-muted-foreground">{files.length ? `${files.length} image${files.length > 1 ? "s" : ""} selected` : "Choose images"}</span>
+            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => setFiles(Array.from(e.target.files ?? []))} />
           </label>
         </div>
         {err && <p className="text-sm text-destructive md:col-span-2">{err}</p>}
