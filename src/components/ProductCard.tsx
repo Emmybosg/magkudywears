@@ -141,6 +141,16 @@ export function ProductCard({ product }: { product: Product }) {
             {Number(product.price).toLocaleString()}
           </span>
         </div>
+        {!product.in_stock && (
+          <a
+            href={preorderUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-bold uppercase tracking-widest text-background transition-all duration-300 hover:opacity-90 hover:scale-[1.02] active:scale-95"
+          >
+            <MessageCircle className="h-4 w-4" /> Preorder on WhatsApp
+          </a>
+        )}
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
