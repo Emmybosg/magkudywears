@@ -1,3 +1,3 @@
 # Roadmap
 
-- [ ] Remove the "Browse the edit" (Ember Edit) button from the hero
+- [x] Remove the "Browse the edit" (Ember Edit) button from the hero
