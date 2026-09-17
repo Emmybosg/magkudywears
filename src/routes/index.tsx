@@ -116,18 +116,6 @@ function Hero() {
             <Sparkles className="absolute -right-6 -top-6 h-40 w-40 text-primary/10 float-soft pointer-events-none" />
           </div>
 
-          {/* Stat cells */}
-          <div className="group/stat tilt-card col-span-3 md:col-span-2 row-span-2 rounded-[2rem] p-6 flex flex-col justify-between text-primary-foreground relative overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30" style={{ background: "var(--gradient-violet)" }}>
-            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">Trusted by</p>
-            <div>
-              <p className="font-display text-5xl md:text-6xl leading-none transition-transform duration-500 group-hover/stat:scale-105 origin-left">2,400+</p>
-              <p className="text-sm opacity-90 mt-1">Happy customers across Nigeria</p>
-            </div>
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current transition-transform duration-300 hover:scale-125" style={{ transitionDelay: `${i * 40}ms` }} />)}
-            </div>
-            <div className="pointer-events-none absolute -right-16 -bottom-16 w-48 h-48 bg-white/10 rounded-full blur-3xl transition-transform duration-1000 group-hover/stat:scale-150" />
-          </div>
 
           <div className="group/free tilt-card col-span-3 md:col-span-2 row-span-2 rounded-[2rem] border border-border/70 bg-card p-6 flex flex-col justify-between shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elegant)] hover:border-primary/30">
             <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Free delivery</p>
