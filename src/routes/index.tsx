@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, ArrowRight, Star, Sparkles, Scissors, Users } from "lucide-react";
+import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, Star, Sparkles, Scissors, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { ProductCard, type Product } from "@/components/ProductCard";
@@ -97,13 +97,6 @@ function Hero() {
               delivered.
             </h1>
             <div className="flex flex-wrap gap-3">
-              <a
-                href="#products"
-                className="shine-btn group/cta inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.03] hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
-                style={{ background: "var(--gradient-ember)" }}
-              >
-                <span className="relative z-10 inline-flex items-center gap-2">Browse the edit <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1" /></span>
-              </a>
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
