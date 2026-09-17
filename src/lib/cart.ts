@@ -69,3 +69,9 @@ export function buildWhatsAppOrder(items: CartItem[], total: number) {
   const raw = `Hello Magkudy Luxury Wears! I'd like to place an order:\n\n${lines.join("\n\n")}\n\n*Total: ₦${total.toLocaleString()}*`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(raw)}`;
 }
+
+export function buildWhatsAppPreorder(name: string, imageUrl?: string | null) {
+  const img = imageUrl ? `\n${imageUrl}` : "";
+  const raw = `Hello Magkudy Luxury Wears! I'd like to preorder *${name}* (currently sold out). Is it available?${img}`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(raw)}`;
+}
