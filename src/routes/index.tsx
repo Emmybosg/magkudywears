@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, Star, Sparkles, Scissors, Users } from "lucide-react";
+import { ShieldCheck, Truck, RotateCcw, Headset, MessageCircle, Sparkles, Scissors, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { ProductCard, type Product } from "@/components/ProductCard";
