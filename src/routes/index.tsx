@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { ProductCard, type Product } from "@/components/ProductCard";
 import { WHATSAPP_NUMBER } from "@/lib/cart";
-import hero from "@/assets/hero.jpg";
 
 export default function Index() {
   const { data: products = [], isLoading } = useQuery({
