@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
-import { useCart } from "@/lib/cart";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle } from "lucide-react";
+import { useCart, buildWhatsAppPreorder } from "@/lib/cart";
 
 export type Product = {
   id: string;
@@ -27,6 +27,7 @@ export function ProductCard({ product }: { product: Product }) {
   );
   const cover = gallery[0];
   const current = gallery[index] ?? cover;
+  const preorderUrl = buildWhatsAppPreorder(product.name, product.image_url);
 
   useEffect(() => {
     if (!open) return;
@@ -86,26 +87,44 @@ export function ProductCard({ product }: { product: Product }) {
             Sold out
           </span>
         )}
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label="Add to cart"
-          aria-disabled={!product.in_stock}
-          onClick={(e) => { e.stopPropagation(); if (product.in_stock) handleAdd(); }}
-          onKeyDown={(e) => {
-            if ((e.key === "Enter" || e.key === " ") && product.in_stock) {
-              e.stopPropagation();
-              e.preventDefault();
-              handleAdd();
-            }
-          }}
-          className={`flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-500 hover:scale-110 active:scale-95 ${!product.in_stock ? "opacity-30 pointer-events-none" : ""}`}
-          style={{ background: "var(--gradient-ember)" }}
-        >
-          <Plus className="h-5 w-5" />
-        </span>
+        {product.in_stock ? (
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label="Add to cart"
+            onClick={(e) => { e.stopPropagation(); handleAdd(); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+                e.preventDefault();
+                handleAdd();
+              }
+            }}
+            className="absolute bottom-4 left-4 right-4 inline-flex items-center justify-center gap-2 rounded-full px-4 py-3.5 text-sm font-bold uppercase tracking-widest text-primary-foreground shadow-[var(--shadow-glow)] ring-2 ring-background/60 transition-all duration-300 hover:scale-[1.03] active:scale-95"
+            style={{ background: "var(--gradient-ember)" }}
+          >
+            <Plus className="h-4 w-4" strokeWidth={3} /> Add to cart
+          </span>
+        ) : (
+          <span
+            role="link"
+            tabIndex={0}
+            aria-label="Preorder on WhatsApp"
+            onClick={(e) => { e.stopPropagation(); window.open(preorderUrl, "_blank"); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+                e.preventDefault();
+                window.open(preorderUrl, "_blank");
+              }
+            }}
+            className="absolute bottom-4 left-4 right-4 inline-flex items-center justify-center gap-2 rounded-full bg-background/95 px-4 py-3.5 text-sm font-bold uppercase tracking-widest text-foreground shadow-lg ring-2 ring-foreground/20 backdrop-blur-sm transition-all duration-300 hover:scale-[1.03] active:scale-95"
+          >
+            <MessageCircle className="h-4 w-4" /> Preorder
+          </span>
+        )}
         {added && (
-          <div className="absolute bottom-4 right-4 mb-14 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
+          <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
             Added to cart
           </div>
         )}
@@ -122,6 +141,16 @@ export function ProductCard({ product }: { product: Product }) {
             {Number(product.price).toLocaleString()}
           </span>
         </div>
+        {!product.in_stock && (
+          <a
+            href={preorderUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-bold uppercase tracking-widest text-background transition-all duration-300 hover:opacity-90 hover:scale-[1.02] active:scale-95"
+          >
+            <MessageCircle className="h-4 w-4" /> Preorder on WhatsApp
+          </a>
+        )}
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
@@ -211,7 +240,7 @@ export function ProductCard({ product }: { product: Product }) {
                   <span className="opacity-70 mr-0.5">₦</span>{Number(product.price).toLocaleString()}
                 </p>
               </div>
-              {product.in_stock && (
+              {product.in_stock ? (
                 <button
                   onClick={handleAdd}
                   className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-105 transition"
@@ -219,6 +248,15 @@ export function ProductCard({ product }: { product: Product }) {
                 >
                   <Plus className="h-4 w-4" /> {added ? "Added" : "Add to cart"}
                 </button>
+              ) : (
+                <a
+                  href={preorderUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 text-sm font-bold uppercase tracking-widest text-foreground shadow-lg hover:scale-105 transition"
+                >
+                  <MessageCircle className="h-4 w-4" /> Preorder
+                </a>
               )}
             </div>
           </div>
