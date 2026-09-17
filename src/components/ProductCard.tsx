@@ -240,7 +240,7 @@ export function ProductCard({ product }: { product: Product }) {
                   <span className="opacity-70 mr-0.5">₦</span>{Number(product.price).toLocaleString()}
                 </p>
               </div>
-              {product.in_stock && (
+              {product.in_stock ? (
                 <button
                   onClick={handleAdd}
                   className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-105 transition"
@@ -248,6 +248,15 @@ export function ProductCard({ product }: { product: Product }) {
                 >
                   <Plus className="h-4 w-4" /> {added ? "Added" : "Add to cart"}
                 </button>
+              ) : (
+                <a
+                  href={preorderUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 text-sm font-bold uppercase tracking-widest text-foreground shadow-lg hover:scale-105 transition"
+                >
+                  <MessageCircle className="h-4 w-4" /> Preorder
+                </a>
               )}
             </div>
           </div>
