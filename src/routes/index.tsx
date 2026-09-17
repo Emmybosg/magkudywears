@@ -81,7 +81,7 @@ function Hero() {
         {/* Bento grid */}
         <div className="grid grid-cols-6 auto-rows-[110px] md:auto-rows-[140px] gap-3 md:gap-4">
           {/* Headline cell */}
-          <div className="col-span-6 md:col-span-4 row-span-3 rounded-[2rem] border border-border/70 bg-card p-6 md:p-10 flex flex-col justify-between relative overflow-hidden shadow-[var(--shadow-card)]">
+          <div className="col-span-6 row-span-3 rounded-[2rem] border border-border/70 bg-card p-6 md:p-10 flex flex-col justify-between relative overflow-hidden shadow-[var(--shadow-card)]">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: "var(--accent)" }} /> Est. Akwa Ibom · Nigeria
             </span>
@@ -115,22 +115,6 @@ function Hero() {
               </span>
             </div>
             <Sparkles className="absolute -right-6 -top-6 h-40 w-40 text-primary/10 float-soft pointer-events-none" />
-          </div>
-
-          {/* Hero image cell */}
-          <div className="group/img col-span-3 md:col-span-2 row-span-3 rounded-[2rem] overflow-hidden relative shadow-[var(--shadow-elegant)] cursor-pointer">
-            <img
-              src={hero}
-              alt="Featured"
-              fetchPriority="high"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover/img:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 text-background transition-transform duration-500 group-hover/img:-translate-y-1">
-              <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">This week</p>
-              <p className="font-display italic text-2xl leading-tight mt-1">The Ember Edit</p>
-            </div>
           </div>
 
           {/* Stat cells */}
