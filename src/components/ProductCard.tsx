@@ -27,6 +27,7 @@ export function ProductCard({ product }: { product: Product }) {
   );
   const cover = gallery[0];
   const current = gallery[index] ?? cover;
+  const preorderUrl = buildWhatsAppPreorder(product.name, product.image_url);
 
   useEffect(() => {
     if (!open) return;
