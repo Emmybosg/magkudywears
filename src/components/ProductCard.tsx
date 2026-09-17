@@ -99,7 +99,7 @@ export function ProductCard({ product }: { product: Product }) {
               handleAdd();
             }
           }}
-          className={`absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] opacity-0 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110 ${!product.in_stock ? "opacity-30 pointer-events-none" : ""}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-500 hover:scale-110 active:scale-95 ${!product.in_stock ? "opacity-30 pointer-events-none" : ""}`}
           style={{ background: "var(--gradient-ember)" }}
         >
           <Plus className="h-5 w-5" />

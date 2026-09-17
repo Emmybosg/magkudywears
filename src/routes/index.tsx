@@ -125,19 +125,6 @@ function Hero() {
             </div>
           </div>
 
-          <div className="group/nc tilt-card col-span-6 md:col-span-2 row-span-2 rounded-[2rem] p-6 flex flex-col justify-between text-primary-foreground relative overflow-hidden hover:shadow-2xl hover:shadow-pink-500/30" style={{ background: "var(--gradient-ember)" }}>
-            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">No checkout</p>
-            <p className="font-display text-3xl leading-tight italic">Order in one message.</p>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex w-fit items-center gap-2 rounded-full bg-background/20 backdrop-blur px-4 py-2 text-xs font-semibold hover:bg-background/30 hover:translate-x-1 transition-all duration-300"
-            >
-              <MessageCircle className="h-3.5 w-3.5 transition-transform group-hover/nc:rotate-[-10deg]" /> WhatsApp
-            </a>
-            <div className="pointer-events-none absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl transition-transform duration-1000 group-hover/nc:scale-150" />
-          </div>
         </div>
       </div>
     </section>
