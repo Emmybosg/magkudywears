@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle } from "lucide-react";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle, Shirt } from "lucide-react";
 import { useCart, buildWhatsAppPreorder } from "@/lib/cart";
+import { useFittingRoom } from "@/lib/fitting";
 
 export type Product = {
   id: string;
@@ -15,7 +16,9 @@ export type Product = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
+  const { add: tryOn } = useFittingRoom();
   const [added, setAdded] = useState(false);
+  const [tried, setTried] = useState(false);
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -56,6 +59,12 @@ export function ProductCard({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleTry = () => {
+    tryOn({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
+    setTried(true);
+    setTimeout(() => setTried(false), 1500);
+  };
+
   return (
     <>
     <article className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[var(--shadow-card)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-elegant)] hover:border-transparent">
@@ -82,8 +91,25 @@ export function ProductCard({ product }: { product: Product }) {
             {gallery.length} photos
           </span>
         )}
+        <span
+          role="button"
+          tabIndex={0}
+          aria-label="Try in fitting room"
+          title="Try in fitting room"
+          onClick={(e) => { e.stopPropagation(); handleTry(); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.stopPropagation();
+              e.preventDefault();
+              handleTry();
+            }
+          }}
+          className="absolute top-4 left-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-border/60 bg-background/80 text-foreground shadow-md backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-background active:scale-95"
+        >
+          <Shirt className="h-4 w-4" />
+        </span>
         {!product.in_stock && (
-          <span className="absolute top-4 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">
+          <span className="absolute top-16 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">
             Sold out
           </span>
         )}
@@ -126,6 +152,11 @@ export function ProductCard({ product }: { product: Product }) {
         {added && (
           <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
             Added to cart
+          </div>
+        )}
+        {tried && (
+          <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
+            In fitting room
           </div>
         )}
       </button>
