@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle, Hanger } from "lucide-react";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle, Shirt } from "lucide-react";
 import { useCart, buildWhatsAppPreorder } from "@/lib/cart";
 import { useFittingRoom } from "@/lib/fitting";
 
@@ -106,7 +106,7 @@ export function ProductCard({ product }: { product: Product }) {
           }}
           className="absolute top-4 left-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-border/60 bg-background/80 text-foreground shadow-md backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-background active:scale-95"
         >
-          <Hanger className="h-4 w-4" />
+          <Shirt className="h-4 w-4" />
         </span>
         {!product.in_stock && (
           <span className="absolute top-16 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">

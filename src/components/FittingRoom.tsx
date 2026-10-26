@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { X, Trash2, MessageCircle, Hanger, ShoppingBag } from "lucide-react";
+import { X, Trash2, MessageCircle, Shirt, ShoppingBag } from "lucide-react";
 import { useFittingRoom, SIZES, buildFittingWhatsApp } from "@/lib/fitting";
 import { useCart } from "@/lib/cart";
 import mannequin from "@/assets/mannequin.jpg";
@@ -39,7 +39,7 @@ export function FittingRoom({ open, onClose }: { open: boolean; onClose: () => v
               className="flex h-9 w-9 items-center justify-center rounded-full text-primary-foreground"
               style={{ background: "var(--gradient-ember)" }}
             >
-              <Hanger className="h-4 w-4" />
+              <Shirt className="h-4 w-4" />
             </div>
             <div className="leading-tight">
               <h2 className="font-display text-xl tracking-tight">Fitting Room</h2>

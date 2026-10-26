@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Shield, Hanger } from "lucide-react";
+import { ShoppingBag, Shield, Shirt } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useFittingRoom } from "@/lib/fitting";
 import { useState } from "react";
@@ -47,7 +47,7 @@ export function Navbar() {
               aria-label="Open fitting room"
               title="Fitting room"
             >
-              <Hanger className="h-5 w-5" />
+              <Shirt className="h-5 w-5" />
               {fitCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-background animate-in zoom-in duration-300">
                   {fitCount}
