@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Shield } from "lucide-react";
+import { ShoppingBag, Shield, Hanger } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useFittingRoom } from "@/lib/fitting";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
+import { FittingRoom } from "./FittingRoom";
 
 export function Navbar() {
   const { count } = useCart();
+  const { count: fitCount } = useFittingRoom();
   const [open, setOpen] = useState(false);
+  const [fitOpen, setFitOpen] = useState(false);
 
   return (
     <>
@@ -38,6 +42,19 @@ export function Navbar() {
               <span className="hidden sm:inline">Admin</span>
             </Link>
             <button
+              onClick={() => setFitOpen(true)}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-[var(--shadow-card)] hover:bg-muted hover:scale-110 active:scale-95 transition-all duration-300"
+              aria-label="Open fitting room"
+              title="Fitting room"
+            >
+              <Hanger className="h-5 w-5" />
+              {fitCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-bold text-background animate-in zoom-in duration-300">
+                  {fitCount}
+                </span>
+              )}
+            </button>
+            <button
               onClick={() => setOpen(true)}
               className="relative flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-110 active:scale-95 transition-all duration-300 group"
               style={{ background: "var(--gradient-ember)" }}
@@ -54,6 +71,7 @@ export function Navbar() {
         </div>
       </header>
       <CartDrawer open={open} onClose={() => setOpen(false)} />
+      <FittingRoom open={fitOpen} onClose={() => setFitOpen(false)} />
     </>
   );
 }
