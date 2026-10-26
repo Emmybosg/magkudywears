@@ -91,8 +91,25 @@ export function ProductCard({ product }: { product: Product }) {
             {gallery.length} photos
           </span>
         )}
+        <span
+          role="button"
+          tabIndex={0}
+          aria-label="Try in fitting room"
+          title="Try in fitting room"
+          onClick={(e) => { e.stopPropagation(); handleTry(); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.stopPropagation();
+              e.preventDefault();
+              handleTry();
+            }
+          }}
+          className="absolute top-4 left-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-border/60 bg-background/80 text-foreground shadow-md backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-background active:scale-95"
+        >
+          <Hanger className="h-4 w-4" />
+        </span>
         {!product.in_stock && (
-          <span className="absolute top-4 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">
+          <span className="absolute top-16 left-4 rounded-full bg-foreground/90 px-3 py-1 text-[10px] uppercase tracking-widest font-semibold text-background backdrop-blur-md">
             Sold out
           </span>
         )}
@@ -135,6 +152,11 @@ export function ProductCard({ product }: { product: Product }) {
         {added && (
           <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
             Added to cart
+          </div>
+        )}
+        {tried && (
+          <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
+            In fitting room
           </div>
         )}
       </button>
