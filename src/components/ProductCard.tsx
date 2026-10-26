@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle } from "lucide-react";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle, Hanger } from "lucide-react";
 import { useCart, buildWhatsAppPreorder } from "@/lib/cart";
+import { useFittingRoom } from "@/lib/fitting";
 
 export type Product = {
   id: string;
@@ -15,7 +16,9 @@ export type Product = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
+  const { add: tryOn } = useFittingRoom();
   const [added, setAdded] = useState(false);
+  const [tried, setTried] = useState(false);
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
