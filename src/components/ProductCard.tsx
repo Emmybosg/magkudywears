@@ -59,6 +59,12 @@ export function ProductCard({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleTry = () => {
+    tryOn({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
+    setTried(true);
+    setTimeout(() => setTried(false), 1500);
+  };
+
   return (
     <>
     <article className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card shadow-[var(--shadow-card)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[var(--shadow-elegant)] hover:border-transparent">
