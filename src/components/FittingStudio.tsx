@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Trash2, MessageCircle, Shirt, ShoppingBag, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
-import { useFittingRoom, SIZES, buildFittingWhatsApp } from "@/lib/fitting";
+import { useFittingStudio, SIZES, buildFittingWhatsApp } from "@/lib/fitting";
 import { useCart } from "@/lib/cart";
 import mannequinSlim from "@/assets/mannequin-slim.jpg";
 import mannequinCurvy from "@/assets/mannequin-curvy.jpg";
@@ -15,7 +15,7 @@ function clampOffset(o: { x: number; y: number }, z: number, r: DOMRect) {
 }
 
 export function FittingStudio({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { items, total, remove, setSize, clear } = useFittingRoom();
+  const { items, total, remove, setSize, clear } = useFittingStudio();
   const { add } = useCart();
   const featured = items[items.length - 1];
 
