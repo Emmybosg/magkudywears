@@ -28,7 +28,7 @@ function write(items: FittingItem[]) {
   window.dispatchEvent(new Event(EVT));
 }
 
-export function useFittingRoom() {
+export function useFittingStudio() {
   const [items, setItems] = useState<FittingItem[]>([]);
 
   useEffect(() => {
