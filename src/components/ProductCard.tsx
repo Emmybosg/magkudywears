@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle, Shirt } from "lucide-react";
 import { useCart, buildWhatsAppPreorder } from "@/lib/cart";
-import { useFittingRoom } from "@/lib/fitting";
+import { useFittingStudio } from "@/lib/fitting";
 
 export type Product = {
   id: string;
@@ -16,7 +16,7 @@ export type Product = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
-  const { add: tryOn } = useFittingRoom();
+  const { add: tryOn } = useFittingStudio();
   const [added, setAdded] = useState(false);
   const [tried, setTried] = useState(false);
   const [open, setOpen] = useState(false);
@@ -94,8 +94,8 @@ export function ProductCard({ product }: { product: Product }) {
         <span
           role="button"
           tabIndex={0}
-          aria-label="Try in fitting room"
-          title="Try in fitting room"
+          aria-label="Try in fitting studio"
+          title="Try in fitting studio"
           onClick={(e) => { e.stopPropagation(); handleTry(); }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -156,7 +156,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
         {tried && (
           <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
-            In fitting room
+            In fitting studio
           </div>
         )}
       </button>
