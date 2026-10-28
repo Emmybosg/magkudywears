@@ -100,9 +100,8 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
     });
   };
 
-  const generateTryOn = async () => {
+  const generateTryOn = async (poseId = pose) => {
     if (!featured?.image_url || tryOn.status === "loading") return;
-    const poseId = pose;
     setTryOn({ status: "loading", key: poseId });
     setZoom(1);
     setOffset({ x: 0, y: 0 });
@@ -128,18 +127,6 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
       setTryOn({ status: "done", url: data.url, key: poseId });
     } catch (err) {
       setTryOn({ status: "error", error: err instanceof Error ? err.message : "Try-on failed.", key: poseId });
-    }
-  };
-
-  const pickPose = (id: string) => {
-    setPose(id);
-    // Picking another pose right after a result is the "rotate" — regenerate for it.
-    if (tryOn.status === "done" && tryOn.key && tryOn.key !== id) {
-      setPose(id);
-      setTimeout(() => {
-        setPose(id);
-        // reuse generateTryOn logic via a synthetic click through state
-      }, 0);
     }
   };
 
@@ -291,7 +278,10 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
                     {POSES.map((p) => (
                       <button
                         key={p.id}
-                        onClick={() => setPose(p.id)}
+                        onClick={() => {
+                          setPose(p.id);
+                          if (tryOn.status === "done") generateTryOn(p.id);
+                        }}
                         aria-pressed={p.id === pose}
                         className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-widest transition ${p.id === pose ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
                       >
