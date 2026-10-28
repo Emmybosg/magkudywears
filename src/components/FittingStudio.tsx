@@ -1,18 +1,31 @@
 import { useEffect, useRef, useState } from "react";
-import { X, Trash2, MessageCircle, Shirt, ShoppingBag, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { X, Trash2, MessageCircle, Shirt, ShoppingBag, ZoomIn, ZoomOut, RotateCcw, Sparkles, Loader2 } from "lucide-react";
 import { useFittingStudio, SIZES, buildFittingWhatsApp } from "@/lib/fitting";
 import { useCart } from "@/lib/cart";
 import mannequinSlim from "@/assets/mannequin-slim.jpg";
 import mannequinCurvy from "@/assets/mannequin-curvy.jpg";
 import mannequinPetite from "@/assets/mannequin-petite.jpg";
 
-const MANNEQUINS = [mannequinSlim, mannequinCurvy, mannequinPetite];
+const MANNEQUINS = [
+  { id: "slim", label: "Slim", src: mannequinSlim },
+  { id: "curvy", label: "Curvy", src: mannequinCurvy },
+  { id: "petite", label: "Petite", src: mannequinPetite },
+];
+
+const POSES = [
+  { id: "front", label: "Front" },
+  { id: "three-quarter", label: "3/4 turn" },
+  { id: "side", label: "Side" },
+  { id: "back", label: "Back" },
+];
 
 function clampOffset(o: { x: number; y: number }, z: number, r: DOMRect) {
   const maxX = Math.max(0, (r.width * z - r.width) / 2);
   const maxY = Math.max(0, (r.height * z - r.height) / 2);
   return { x: Math.min(maxX, Math.max(-maxX, o.x)), y: Math.min(maxY, Math.max(-maxY, o.y)) };
 }
+
+type TryOnState = { status: "idle" | "loading" | "done" | "error"; url?: string; error?: string; key?: string };
 
 export function FittingStudio({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { items, total, remove, setSize, clear } = useFittingStudio();
@@ -24,12 +37,21 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const mannequin = items.length > 0 ? MANNEQUINS[(items.length - 1) % MANNEQUINS.length] : MANNEQUINS[0];
+  const [mannequinId, setMannequinId] = useState("slim");
+  const [pose, setPose] = useState("front");
+  const [tryOn, setTryOn] = useState<TryOnState>({ status: "idle" });
+
+  const mannequin = MANNEQUINS.find((m) => m.id === mannequinId) ?? MANNEQUINS[0];
 
   useEffect(() => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
   }, [featured?.id, open]);
+
+  // A new garment in the spotlight resets the AI try-on result.
+  useEffect(() => {
+    setTryOn({ status: "idle" });
+  }, [featured?.id]);
 
   useEffect(() => {
     if (!open) return;
@@ -78,6 +100,38 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
     });
   };
 
+  const generateTryOn = async (poseId = pose) => {
+    if (!featured?.image_url || tryOn.status === "loading") return;
+    setTryOn({ status: "loading", key: poseId });
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    try {
+      const [garmentRes, mannequinRes] = await Promise.all([fetch(featured.image_url), fetch(mannequin.src)]);
+      if (!garmentRes.ok || !mannequinRes.ok) throw new Error("Could not load the photos for the try-on.");
+      const form = new FormData();
+      form.append("garment", await garmentRes.blob(), "garment.png");
+      form.append("mannequin", await mannequinRes.blob(), "mannequin.png");
+      form.append("garmentSrc", featured.image_url);
+      form.append("mannequinId", mannequinId);
+      form.append("pose", poseId);
+      form.append("garmentName", featured.name);
+      form.append("size", featured.size);
+      const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/try-on`, {
+        method: "POST",
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+        body: form,
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.url) throw new Error(data?.error ?? `Try-on failed (${res.status}).`);
+      setTryOn({ status: "done", url: data.url, key: poseId });
+    } catch (err) {
+      setTryOn({ status: "error", error: err instanceof Error ? err.message : "Try-on failed.", key: poseId });
+    }
+  };
+
+  const showResult = tryOn.status === "done" && tryOn.url;
+
   return (
     <div
       className={`fixed inset-0 z-50 transition ${open ? "pointer-events-auto" : "pointer-events-none"}`}
@@ -118,7 +172,7 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
                 Your fitting studio is empty.
               </p>
               <p className="max-w-xs text-sm text-muted-foreground">
-                Tap the shirt icon on any product to hang it on a mannequin here, then mix pieces and pick your sizes.
+                Tap “Try in fitting studio” on any product to hang it on a mannequin here, then mix pieces and pick your sizes.
               </p>
             </div>
           ) : (
@@ -133,17 +187,34 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
                   className="absolute inset-0"
                   style={{ transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`, transformOrigin: "0 0", transition: dragRef.current ? "none" : "transform 0.25s ease" }}
                 >
-                  <img src={mannequin} alt="Mannequin" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
-                  <div className="absolute inset-0" style={{ background: "var(--gradient-soft)", opacity: 0.25 }} />
-                  {featured?.image_url && (
-                    <img
-                      src={featured.image_url}
-                      alt={featured.name}
-                      className="absolute left-1/2 top-1/2 h-48 w-auto -translate-x-1/2 -translate-y-1/2 rounded-2xl object-cover shadow-[var(--shadow-elegant)]"
-                      draggable={false}
-                    />
+                  {showResult ? (
+                    <img src={tryOn.url} alt={`${featured?.name} on the ${mannequin.label.toLowerCase()} mannequin`} className="absolute inset-0 h-full w-full object-contain" draggable={false} />
+                  ) : (
+                    <>
+                      <img src={mannequin.src} alt="Mannequin" className="absolute inset-0 h-full w-full object-cover" draggable={false} />
+                      <div className="absolute inset-0" style={{ background: "var(--gradient-soft)", opacity: 0.25 }} />
+                      {featured?.image_url && (
+                        <img
+                          src={featured.image_url}
+                          alt={featured.name}
+                          className="absolute left-1/2 top-1/2 h-48 w-auto -translate-x-1/2 -translate-y-1/2 rounded-2xl object-cover shadow-[var(--shadow-elegant)]"
+                          draggable={false}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
+
+                {tryOn.status === "loading" && (
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-background/70 backdrop-blur-sm">
+                    <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                    <p className="text-xs font-medium uppercase tracking-widest text-foreground">
+                      Stitching your look…
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">This takes about half a minute.</p>
+                  </div>
+                )}
+
                 {/* Zoom controls */}
                 <div className="absolute right-3 top-3 z-10 flex flex-col gap-1.5">
                   <button
@@ -171,12 +242,70 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
                   )}
                 </div>
                 <span className="absolute bottom-3 left-3 z-10 rounded-full bg-background/80 px-3 py-1 text-[10px] uppercase tracking-widest backdrop-blur">
-                  {featured?.name} · Size {featured?.size}
+                  {showResult
+                    ? `AI try-on · ${POSES.find((p) => p.id === tryOn.key)?.label ?? pose}`
+                    : `${featured?.name} · Size ${featured?.size}`}
                 </span>
                 {zoom > 1 && (
                   <span className="absolute bottom-3 right-3 z-10 rounded-full bg-background/80 px-3 py-1 text-[10px] uppercase tracking-widest backdrop-blur">
                     Drag to pan
                   </span>
+                )}
+              </div>
+
+              {/* Mannequin + pose controls */}
+              <div className="space-y-3 px-4 pt-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground shrink-0">Mannequin</span>
+                  <div className="flex flex-1 gap-2">
+                    {MANNEQUINS.map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setMannequinId(m.id)}
+                        className={`flex-1 overflow-hidden rounded-xl border-2 transition ${m.id === mannequinId ? "border-primary shadow-[var(--shadow-card)]" : "border-transparent opacity-70 hover:opacity-100"}`}
+                        aria-label={`${m.label} mannequin`}
+                        aria-pressed={m.id === mannequinId}
+                      >
+                        <img src={m.src} alt="" className="h-12 w-full object-cover" loading="lazy" />
+                        <span className="block bg-background py-0.5 text-[9px] font-semibold uppercase tracking-widest">{m.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground shrink-0">Pose</span>
+                  <div className="flex flex-1 flex-wrap gap-1.5">
+                    {POSES.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setPose(p.id);
+                          if (tryOn.status === "done") generateTryOn(p.id);
+                        }}
+                        aria-pressed={p.id === pose}
+                        className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-widest transition ${p.id === pose ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {tryOn.status === "error" && (
+                  <p className="rounded-xl bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                    {tryOn.error} You can try again.
+                  </p>
+                )}
+                <button
+                  onClick={generateTryOn}
+                  disabled={!featured?.image_url || tryOn.status === "loading"}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] hover:opacity-90 transition disabled:opacity-60"
+                  style={{ background: "var(--gradient-ember)" }}
+                >
+                  {tryOn.status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                  {showResult ? "Regenerate with this pose" : "See it on her — AI try-on"}
+                </button>
+                {!featured?.image_url && (
+                  <p className="text-center text-[11px] text-muted-foreground">This item has no photo yet, so it can’t be tried on.</p>
                 )}
               </div>
 
@@ -210,7 +339,7 @@ export function FittingStudio({ open, onClose }: { open: boolean; onClose: () =>
                   </div>
                 ))}
                 <p className="px-1 pt-1 text-xs text-muted-foreground">
-                  Scroll or use the buttons to zoom the mannequin · mix tops, bottoms, shoes and accessories, then send us the look.
+                  Pick a mannequin and a pose, hit the AI try-on, then tap another pose to turn her around · repeat views are instant.
                 </p>
               </div>
 

@@ -50,6 +50,36 @@ export type Database = {
         }
         Relationships: []
       }
+      try_on_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          garment_source: string
+          id: string
+          image_path: string
+          mannequin_id: string
+          pose: string
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          garment_source: string
+          id?: string
+          image_path: string
+          mannequin_id: string
+          pose: string
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          garment_source?: string
+          id?: string
+          image_path?: string
+          mannequin_id?: string
+          pose?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
