@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle, Shirt } from "lucide-react";
+import { Plus, ArrowUpRight, X, ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, MessageCircle } from "lucide-react";
 import { useCart, buildWhatsAppPreorder } from "@/lib/cart";
-import { useFittingStudio } from "@/lib/fitting";
 
 export type Product = {
   id: string;
@@ -16,9 +15,7 @@ export type Product = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
-  const { add: tryOn } = useFittingStudio();
   const [added, setAdded] = useState(false);
-  const [tried, setTried] = useState(false);
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
@@ -57,12 +54,6 @@ export function ProductCard({ product }: { product: Product }) {
     add({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
-  };
-
-  const handleTry = () => {
-    tryOn({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
-    setTried(true);
-    setTimeout(() => setTried(false), 1500);
   };
 
   return (
@@ -137,11 +128,6 @@ export function ProductCard({ product }: { product: Product }) {
             Added to cart
           </div>
         )}
-        {tried && (
-          <div className="absolute bottom-4 right-4 mb-16 rounded-lg bg-background px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground shadow-md border border-border animate-in fade-in zoom-in duration-200">
-            In fitting studio
-          </div>
-        )}
       </button>
       <div className="flex flex-1 flex-col gap-2 p-5 md:p-6">
         <h3 className="font-display text-2xl leading-tight">{product.name}</h3>
@@ -165,13 +151,6 @@ export function ProductCard({ product }: { product: Product }) {
             <MessageCircle className="h-4 w-4" /> Preorder on WhatsApp
           </a>
         )}
-        <button
-          type="button"
-          onClick={handleTry}
-          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-3 text-sm font-semibold uppercase tracking-widest text-foreground transition-all duration-300 hover:bg-muted hover:scale-[1.02] active:scale-95"
-        >
-          <Shirt className="h-4 w-4" /> Try in fitting studio
-        </button>
       </div>
       <ArrowUpRight className="absolute top-5 right-5 h-5 w-5 text-background/0 transition-colors group-hover:text-background" />
     </article>
