@@ -15,6 +15,13 @@
       "when": 1794159764564,
       "tag": "0001_deprecate_try_on_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794159785312,
+      "tag": "0002_remove_try_on_storage_policies",
+      "breakpoints": true
     }
   ]
 }
