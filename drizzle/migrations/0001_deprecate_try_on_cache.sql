@@ -1,0 +1,2 @@
+revoke all on public.try_on_cache from public, anon, authenticated, service_role;
+comment on table public.try_on_cache is 'DEPRECATED: Fitting Studio and AI try-on were removed; retained without access to preserve existing records.';
